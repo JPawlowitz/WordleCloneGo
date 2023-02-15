@@ -35,3 +35,7 @@ func GetRandomWord() string {
 	randomIndex := rand.Intn(len(wordMap))
 	return wordMap[randomIndex]
 }
+
+func CompareWords(word *string, guess *string) {
+
+}
