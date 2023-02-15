@@ -3,12 +3,14 @@ package src
 import "fmt"
 
 func RunGame() {
-	var guessedWords [5]string
+	fmt.Printf("\x1b[%dm%s\x1b[0m", 34, "Correct letter, correct position! \n")
+	fmt.Printf("\x1b[%dm%s\x1b[0m", 90, "Correct letter, false position! \n")
+
 	word := GetRandomWord()
 
 	for try := 0; try < 5; try++ {
-		guessedWords[try] = getInput(&guessedWords, &try)
-		if CompareWords(word, guessedWords[try]) {
+		guess := getInput(&try)
+		if CompareWords(word, guess) {
 			fmt.Println("You won!")
 			return
 		}
@@ -17,7 +19,7 @@ func RunGame() {
 	fmt.Printf("You lost! \n The word was %s", word)
 }
 
-func getInput(pastWords *[5]string, numTries *int) string {
+func getInput(numTries *int) string {
 	fmt.Printf("Try %d/5 \n", *numTries)
 	fmt.Println("Please enter next word:")
 

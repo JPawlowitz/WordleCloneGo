@@ -6,6 +6,5 @@ import (
 
 func main() {
 	src.LoadWords()
-	src.InitAlphabet()
 	src.RunGame()
 }

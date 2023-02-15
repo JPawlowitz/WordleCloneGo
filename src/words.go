@@ -39,66 +39,31 @@ func GetRandomWord() string {
 }
 
 func CompareWords(word string, guess string) bool {
-	var result GuessResult
-	var wrongLetters []string
-
-	for i := 0; i < len(word); i++ {
-		letter := IndexedChar{char: guess[i], index: i}
-
-		if word[i] == guess[i] {
-			result.correctPosition = append(result.correctPosition, letter)
-			continue
-		} else {
-			for index, _ := range word {
-				if guess[i] == word[index] {
-					result.incorrectPosition = append(result.incorrectPosition, guess[i])
-					continue
-				}
-			}
-		}
-
-		wrongLetters = append(wrongLetters, string(guess[i]))
-	}
-
+	correctPositions := 0
 	stringBuilder := strings.Builder{}
 
-	for i := 0; i < len(guess); i++ {
-		isFalse := true
-
-		for _, correctPosition := range result.correctPosition {
-			if guess[i] == correctPosition.char && i == correctPosition.index {
-				stringBuilder.WriteString(fmt.Sprintf("\x1b[%dm%s\x1b[0m", 34, string(guess[i])))
-				isFalse = false
-				break
-			}
-		}
-
-		if isFalse {
-			for _, incorrectPosition := range result.incorrectPosition {
-				if guess[i] == incorrectPosition {
+	for i := 0; i < len(word); i++ {
+		if word[i] == guess[i] {
+			stringBuilder.WriteString(fmt.Sprintf("\x1b[%dm%s\x1b[0m", 34, string(guess[i])))
+			correctPositions++
+			continue
+		} else {
+			isIncorrect := true
+			for index := range word {
+				if guess[i] == word[index] {
 					stringBuilder.WriteString(fmt.Sprintf("\x1b[%dm%s\x1b[0m", 90, string(guess[i])))
-					isFalse = false
+					isIncorrect = false
 					break
 				}
 			}
-		}
 
-		if isFalse {
-			stringBuilder.WriteString(string(guess[i]))
+			if isIncorrect {
+				stringBuilder.WriteString(string(guess[i]))
+			}
 		}
 	}
 
 	fmt.Print(stringBuilder.String() + "\n")
 
-	return len(result.correctPosition) == len(word)
-}
-
-type GuessResult struct {
-	correctPosition   []IndexedChar
-	incorrectPosition []uint8
-}
-
-type IndexedChar struct {
-	char  uint8
-	index int
+	return correctPositions == len(word)
 }
