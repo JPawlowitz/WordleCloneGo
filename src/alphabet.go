@@ -19,14 +19,3 @@ func PrintRemainingLetters() {
 
 	fmt.Print("\n")
 }
-
-func RemoveLetters(lettersToRemove []string) {
-	for i := 0; i < len(lettersToRemove); i++ {
-		for index, letter := range letters {
-			if letter == lettersToRemove[i] {
-				letters = append(letters[:index], letters[index+1])
-				break
-			}
-		}
-	}
-}

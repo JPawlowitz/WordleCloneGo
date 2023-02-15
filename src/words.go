@@ -38,7 +38,7 @@ func GetRandomWord() string {
 	return wordMap[randomIndex]
 }
 
-func CompareWords(word string, guess string) GuessResult {
+func CompareWords(word string, guess string) bool {
 	var result GuessResult
 	var wrongLetters []string
 
@@ -51,7 +51,7 @@ func CompareWords(word string, guess string) GuessResult {
 		} else {
 			for index, _ := range word {
 				if guess[i] == word[index] {
-					result.incorrectPosition = append(result.incorrectPosition, letter)
+					result.incorrectPosition = append(result.incorrectPosition, guess[i])
 					continue
 				}
 			}
@@ -60,28 +60,42 @@ func CompareWords(word string, guess string) GuessResult {
 		wrongLetters = append(wrongLetters, string(guess[i]))
 	}
 
-	RemoveLetters(wrongLetters)
 	stringBuilder := strings.Builder{}
 
 	for i := 0; i < len(guess); i++ {
+		isFalse := true
+
 		for _, correctPosition := range result.correctPosition {
 			if guess[i] == correctPosition.char && i == correctPosition.index {
 				stringBuilder.WriteString(fmt.Sprintf("\x1b[%dm%s\x1b[0m", 34, string(guess[i])))
+				isFalse = false
 				break
 			}
+		}
 
+		if isFalse {
+			for _, incorrectPosition := range result.incorrectPosition {
+				if guess[i] == incorrectPosition {
+					stringBuilder.WriteString(fmt.Sprintf("\x1b[%dm%s\x1b[0m", 90, string(guess[i])))
+					isFalse = false
+					break
+				}
+			}
+		}
+
+		if isFalse {
 			stringBuilder.WriteString(string(guess[i]))
 		}
 	}
 
 	fmt.Print(stringBuilder.String() + "\n")
 
-	return result
+	return len(result.correctPosition) == len(word)
 }
 
 type GuessResult struct {
 	correctPosition   []IndexedChar
-	incorrectPosition []IndexedChar
+	incorrectPosition []uint8
 }
 
 type IndexedChar struct {

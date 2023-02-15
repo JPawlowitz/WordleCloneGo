@@ -8,8 +8,13 @@ func RunGame() {
 
 	for try := 0; try < 5; try++ {
 		guessedWords[try] = getInput(&guessedWords, &try)
-		CompareWords(word, guessedWords[try])
+		if CompareWords(word, guessedWords[try]) {
+			fmt.Println("You won!")
+			return
+		}
 	}
+
+	fmt.Printf("You lost! \n The word was %s", word)
 }
 
 func getInput(pastWords *[5]string, numTries *int) string {
