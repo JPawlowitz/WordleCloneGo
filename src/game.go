@@ -3,16 +3,17 @@ package src
 import "fmt"
 
 func RunGame() {
+	var guessedWords [5]string
 	word := GetRandomWord()
 
-	for tries := 0; tries <= 5; tries++ {
-		guess := getInput()
-		CompareWords(&word, &guess)
+	for try := 0; try < 5; try++ {
+		guessedWords[try] = getInput(&guessedWords, &try)
+		CompareWords(word, guessedWords[try])
 	}
 }
 
-func getInput() string {
-	PrintRemainingLetters()
+func getInput(pastWords *[5]string, numTries *int) string {
+	fmt.Printf("Try %d/5 \n", *numTries)
 	fmt.Println("Please enter next word:")
 
 	var userInput string
